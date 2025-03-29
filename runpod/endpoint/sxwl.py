@@ -241,12 +241,12 @@ class Endpoint:
         Returns:
             An InferenceService instance for the run request.
         """
-        if not request_input.get("input"):
-            request_input = {"input": request_input}
+        # if not request_input.get("input"):
+        #     request_input = {"input": request_input}
         
         
         inference = InferenceService(self.rp_client)
-        return inference.deploy(request_input)
+        return inference.deploy(request_input.get("input"))
 
     def run_sync(
         self, request_input: Dict[str, Any], timeout: int = 86400
@@ -261,15 +261,13 @@ class Endpoint:
         Returns:
             The output of the completed job.
         """
-        if not request_input.get("input"):
-            request_input = {"input": request_input}
 
         config = APIConfig.create_default()
         client = SXWLClient(config)
         
         inference = InferenceService(client)
         # 启动任务
-        inference = inference.deploy(request_input)
+        inference = inference.deploy(request_input.get("input"))
         # 等待任务完成
         return inference.wait_until_complete()
 
